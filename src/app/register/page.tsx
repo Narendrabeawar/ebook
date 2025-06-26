@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -19,10 +20,19 @@ export default function RegisterPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+      return;
+    }
+    // Insert or update name in profiles table
+    const userId = data?.user?.id;
+    if (userId) {
+      await supabase.from("profiles").upsert({ id: userId, name });
+    }
     setLoading(false);
-    if (error) setError(error.message);
-    else router.push("/dashboard");
+    router.push("/dashboard");
   };
 
   return (
@@ -40,6 +50,10 @@ export default function RegisterPage() {
             <div>
               <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required className="bg-[#f5faff] border border-[#bbdefb] rounded-lg" />
+            </div>
+            <div>
+              <Label htmlFor="name">Name</Label>
+              <Input id="name" type="text" value={name} onChange={e => setName(e.target.value)} required className="bg-[#f5faff] border border-[#bbdefb] rounded-lg" />
             </div>
             {error && <div className="text-red-500 text-sm">{error}</div>}
             <Button type="submit" className="w-full bg-[#1a237e] text-white font-bold rounded-lg hover:bg-[#1976d2]" disabled={loading}>{loading ? "Registering..." : "Register"}</Button>

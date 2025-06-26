@@ -18,16 +18,16 @@ export default async function GalleryPage() {
   return (
     <div className="min-h-screen bg-[#e3f0fc] px-4 py-10 font-sans">
       <h1 className="text-3xl font-bold mb-8 text-center text-[#1a237e]">Ebook Gallery</h1>
-      <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
         {ebooks && ebooks.length > 0 ? (
           ebooks.map((ebook) => (
             <Link
               key={ebook.id}
               href={`/gallery/${ebook.id}`}
-              className="bg-white border border-[#bbdefb] rounded-2xl shadow-md p-4 flex flex-col cursor-pointer hover:shadow-lg transition-shadow duration-200"
+              className="bg-[#abd9d7] border border-[#bbdefb] rounded-2xl shadow-md p-2 flex flex-col cursor-pointer hover:shadow-lg transition-shadow duration-200 max-w-xs w-full mx-auto"
             >
               {ebook.cover_image_url ? (
-                <div className="relative w-full h-48 mb-4 rounded-lg overflow-hidden">
+                <div className="relative w-full h-32 mb-2 rounded-lg overflow-hidden">
                   <Image
                     src={ebook.cover_image_url}
                     alt={ebook.title}
@@ -36,13 +36,13 @@ export default async function GalleryPage() {
                   />
                 </div>
               ) : (
-                <div className="w-full h-48 bg-[#e3f0fc] flex items-center justify-center mb-4 rounded-lg">
-                  <span className="text-[#90a4ae]">No Cover</span>
+                <div className="w-full h-32 bg-[#e3f0fc] flex items-center justify-center mb-2 rounded-lg">
+                  <span className="text-[#90a4ae] text-xs">No Cover</span>
                 </div>
               )}
-              <h2 className="text-lg font-semibold mb-2 line-clamp-1 text-[#1a237e]">{ebook.title}</h2>
-              <p className="text-sm text-[#37474f] mb-4 line-clamp-3">{ebook.description}</p>
-              <span className="mt-auto text-[#1976d2] font-bold text-sm underline opacity-0 group-hover:opacity-100 transition-opacity">Read Book</span>
+              <h2 className="text-base font-semibold mb-1 line-clamp-1 text-[#1a237e]">{ebook.title}</h2>
+              <p className="text-xs text-[#37474f] mb-2 line-clamp-2">{ebook.description}</p>
+              <span className="mt-auto text-[#1976d2] font-bold text-xs underline opacity-0 group-hover:opacity-100 transition-opacity">Read Book</span>
             </Link>
           ))
         ) : (

@@ -9,15 +9,17 @@ import type { User } from '@supabase/supabase-js';
 type NavbarProps = {
   user: User | null;
   isAdmin: boolean;
+  userName?: string;
 };
 
-export default function Navbar({ user, isAdmin }: NavbarProps) {
+export default function Navbar({ user, isAdmin, userName }: NavbarProps) {
   const pathname = usePathname();
 
   const avatarInitial = user && typeof user.email === 'string' && user.email.length > 0
     ? user.email[0].toUpperCase()
     : '';
   const userEmail = typeof user?.email === 'string' ? user.email : '';
+  const displayName = userName && userName.trim().length > 0 ? userName : userEmail;
 
   return (
     <nav className="w-full bg-white shadow-lg px-4 py-2 flex items-center justify-between sticky top-0 z-50 border-b border-[#bbdefb]">
@@ -60,7 +62,7 @@ export default function Navbar({ user, isAdmin }: NavbarProps) {
             <Avatar className="w-8 h-8">
               <AvatarFallback>{avatarInitial}</AvatarFallback>
             </Avatar>
-            <span className="text-[#1a237e] font-medium text-sm hidden sm:inline">{userEmail}</span>
+            <span className="text-[#1a237e] font-medium text-sm hidden sm:inline">{displayName}</span>
             {isAdmin && <Badge className="bg-[#1976d2] text-white ml-2">Admin</Badge>}
             <form action="/auth/signout" method="post">
               <Button size="sm" variant="outline" className="ml-2 border-[#bbdefb] text-[#1a237e] hover:bg-[#bbdefb] hover:text-[#1a237e]">Sign out</Button>

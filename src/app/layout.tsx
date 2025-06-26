@@ -14,18 +14,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     data: { user },
   } = await supabase.auth.getUser();
   let isAdmin = false;
+  let userName = '';
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("is_admin")
+      .select("is_admin, name")
       .eq("id", user.id)
       .single();
     isAdmin = !!profile?.is_admin;
+    userName = profile?.name || '';
   }
   return (
     <html lang="en">
       <body className="bg-premium-dark min-h-screen">
-        <Navbar user={user} isAdmin={isAdmin} />
+        <Navbar user={user} isAdmin={isAdmin} userName={userName} />
         {children}
       </body>
     </html>
