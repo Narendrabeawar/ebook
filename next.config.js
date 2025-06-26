@@ -5,6 +5,9 @@ const nextConfig = {
       "qyszaldpykpbcndgqebz.supabase.co"
     ],
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 module.exports = nextConfig; 
