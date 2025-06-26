@@ -1,48 +1,18 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import type { User } from '@supabase/supabase-js';
 
-export default function Navbar() {
+type NavbarProps = {
+  user: User | null;
+  isAdmin: boolean;
+};
+
+export default function Navbar({ user, isAdmin }: NavbarProps) {
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
-  const [user, setUser] = useState<{ email: string; id: string } | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const supabase = createClientComponentClient();
-
-  useEffect(() => {
-    setMounted(true);
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setUser({ email: user.email ?? '', id: user.id });
-        // Fetch admin status
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("is_admin")
-          .eq("id", user.id)
-          .single();
-        setIsAdmin(!!profile?.is_admin);
-      } else {
-        setUser(null);
-        setIsAdmin(false);
-      }
-    };
-    getUser();
-    // Listen for auth changes
-    const { data: listener } = supabase.auth.onAuthStateChange(() => {
-      getUser();
-    });
-    return () => {
-      listener?.subscription.unsubscribe();
-    };
-    // eslint-disable-next-line
-  }, []);
-  if (!mounted) return null;
 
   const avatarInitial = user && typeof user.email === 'string' && user.email.length > 0
     ? user.email[0].toUpperCase()
